@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>大学城美食地图</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- 产品使用说明：首次进入网站弹出，左上角关闭；我的页可再次打开 -->
+      <div id="introOverlay" class="intro-overlay hidden">
+        <button type="button" class="intro-close" id="introCloseBtn" aria-label="关闭">×</button>
+        <div class="intro-content">
+          <h2 class="intro-title">大学城美食地图 · 产品使用说明</h2>
+          <p class="intro-subtitle">帮你解决「不知道吃什么」「怕踩雷」「找不到性价比」的校园觅食难题</p>
+          <p class="intro-purpose">本产品旨在<strong>减少用户在不同平台间反复搜索的步骤</strong>，<strong>提高觅食与下单效率</strong>，<strong>优化从选店到下单/到店的路径</strong>，让校园就餐更省心。</p>
+
+          <section class="intro-section">
+            <h3 class="intro-section-title">核心功能</h3>
+            <ul class="intro-list">
+              <li><strong>智能筛选</strong>：按品类（美食、奶茶、川菜、火锅等）、距离、评分、人均价、场景快速筛出心仪店铺。</li>
+              <li><strong>小智 AI</strong>：右下角「小智」悬浮球，输入需求可跳转 AI 智能推荐；悬停店铺或社区帖子即可看到<em>小智总结</em>，快速了解亮点与适合场景。</li>
+              <li><strong>学生认证</strong>：发帖与评论前需完成学生认证，保障校友社区评价的真实性，减少虚假种草与刷评。</li>
+              <li><strong>校友社区</strong>：查看真实探店帖、关联餐厅一键跳转详情，支持发帖晒图/视频，与同校吃货交流。</li>
+              <li><strong>外卖与导航</strong>：店铺详情页可直接跳转至该店铺的外卖界面或导航地图界面，选好即点餐、找路即出发。</li>
+              <li><strong>家乡美味</strong>：按家乡地区找熟悉味道；收藏与最近浏览方便下次直奔心头好。</li>
+            </ul>
+          </section>
+
+          <section class="intro-section">
+            <h3 class="intro-section-title">使用指南</h3>
+            <ol class="intro-steps">
+              <li>首页用品类标签与筛选条件缩小范围，点击店铺卡片进入详情查看菜品、环境与评价。</li>
+              <li>点击右下角「小智」输入需求（如「一人食火锅」「30 元以内团建」）进入 AI 推荐页匹配结果。</li>
+              <li>右上角登录后，在「我的」完成学生认证，即可在「校友社区」发帖、评论。</li>
+              <li>店铺详情页可收藏、查看商家环境大图，并通过「外卖点这家」「导航去这家」直接跳转至外卖界面或地图导航。</li>
+            </ol>
+          </section>
+
+          <p class="intro-footer">关闭后可在「我的」→「产品使用说明」再次查看本指南。</p>
+        </div>
+      </div>
+
+      <header class="app-header">
+        <div class="app-title">
+          <span class="app-logo" aria-hidden="true">
+            <svg class="app-logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="大学城美食地图">
+              <!-- 地图钉外形 + 渐变 -->
+              <path d="M24 4C15.16 4 8 11.16 8 20c0 12 16 24 16 24s16-12 16-24C40 11.16 32.84 4 24 4z" fill="url(#logoGrad)" stroke="rgba(232,93,58,0.35)" stroke-width="1.5" stroke-linejoin="round"/>
+              <!-- 中心圆底 -->
+              <circle cx="24" cy="20" r="9" fill="#fff" opacity="0.96"/>
+              <!-- 筷子/叉勺简笔 -->
+              <path d="M21 16v8m0-8l1.5 2M21 24l1.5-2M27 16v8m0-8l-1.5 2M27 24l-1.5-2M24 15v9" stroke="#e85d3a" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+              <circle cx="24" cy="20" r="2.5" fill="none" stroke="#e85d3a" stroke-width="1.1"/>
+              <defs>
+                <linearGradient id="logoGrad" x1="8" y1="4" x2="40" y2="44" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#e85d3a"/>
+                  <stop offset="1" stop-color="#ff8f73"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <div>
+            <h1 class="app-title-text">大学城美食地图</h1>
+            <p class="subtitle">帮你在校园附近，快速找到好吃又不贵的一家 · 为大学生打造</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="school-switcher">
+            <label for="schoolSelect">当前学校</label>
+            <select id="schoolSelect">
+              <option value="default">示例大学城</option>
+            </select>
+          </div>
+          <button type="button" id="headerLoginBtn" class="header-login-btn">登录</button>
+          <button type="button" id="headerUserBtn" class="header-user-btn hidden" title="我的" aria-label="我的">👤</button>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <nav class="main-nav">
+          <button class="nav-tab active" data-tab="home">首页</button>
+          <button class="nav-tab" data-tab="community">校友社区</button>
+          <button class="nav-tab" data-tab="hometown">家乡美味</button>
+          <button class="nav-tab nav-tab-hidden" data-tab="ai">AI 推荐</button>
+          <button class="nav-tab nav-tab-hidden" data-tab="profile">我的</button>
+        </nav>
+
+        <section class="tab-content active" id="tab-home">
+          <section class="search-and-filters">
+            <div class="search-bar">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="搜索餐厅 / 菜系 / 菜品"
+              />
+              <button id="searchButton">搜索</button>
+            </div>
+
+            <div class="core-tags-row">
+              <div class="core-tags-left">
+                <button class="core-tag active" data-core-key="food">美食</button>
+                <button class="core-tag" data-core-key="milk-tea">奶茶</button>
+                <button class="core-tag" data-core-key="coffee">咖啡</button>
+                <button class="core-tag" data-core-key="sichuan">川菜</button>
+                <button class="core-tag" data-core-key="hotpot">火锅</button>
+                <button class="core-tag" data-core-key="bbq">烤肉</button>
+                <button class="core-tag" data-core-key="japanese">日料</button>
+                <button class="core-tag" data-core-key="western">西餐</button>
+                <button class="core-tag" data-core-key="cantonese">粤菜</button>
+                <button class="core-tag" data-core-key="fastfood">快餐</button>
+                <button class="core-tag" data-core-key="light">轻食</button>
+                <button class="core-tag" data-core-key="noodle">粉面</button>
+              </div>
+            </div>
+
+            <div class="filter-row">
+              <div class="filter-group">
+                <label for="distanceFilter">距离</label>
+                <select id="distanceFilter">
+                  <option value="any">不限</option>
+                  <option value="0.5">500m</option>
+                  <option value="1">1km</option>
+                  <option value="3">3km</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="ratingFilter">评分</label>
+                <select id="ratingFilter">
+                  <option value="any">不限</option>
+                  <option value="4.5">4.5+</option>
+                  <option value="4.0">4.0+</option>
+                  <option value="3.5">3.5+</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="priceMinRange">人均价格</label>
+                <div class="price-range-dual" id="priceRangeDual">
+                  <div class="price-range-track"></div>
+                  <input type="range" id="priceMinRange" min="0" max="80" step="1" value="0" aria-label="最低人均" />
+                  <input type="range" id="priceMaxRange" min="0" max="80" step="1" value="60" aria-label="最高人均" />
+                  <span class="price-thumb-label" id="priceMinLabel">¥0</span>
+                  <span class="price-thumb-label" id="priceMaxLabel">¥60</span>
+                </div>
+                <span id="priceRangeLabel" class="price-label">¥0 － ¥60</span>
+              </div>
+              <div class="filter-group">
+                <label for="sceneFilter">场景</label>
+                <select id="sceneFilter">
+                  <option value="any">不限</option>
+                  <option value="solo">一个人吃</option>
+                  <option value="dorm">宿舍聚餐</option>
+                  <option value="date">约会</option>
+                  <option value="late-night">深夜食堂</option>
+                  <option value="study">自习友好</option>
+                  <option value="delivery">外卖友好</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section class="home-main-layout">
+            <div class="today-random-row">
+              <div class="today-recommend list-panel">
+                <div class="panel-header-row">
+                  <div>
+                    <h2>今日推荐</h2>
+                    <p class="panel-desc">为你从附近挑选 3 家高性价比餐厅。</p>
+                  </div>
+                  <button id="refreshRecommendButton" class="link-button">
+                    换一批
+                  </button>
+                </div>
+                <div id="todayRecommendList" class="card-grid"></div>
+              </div>
+
+              <div class="random-section list-panel">
+                <h2>今天吃什么？</h2>
+                <p class="panel-desc">
+                  如果你完全没有头绪，可以点下面这个按钮交给命运。
+                </p>
+                <button id="randomButton" class="random-button">
+                  🎲 随机选一家
+                </button>
+              </div>
+            </div>
+
+            <div class="home-bottom-row">
+              <section class="list-panel restaurant-list-wrap">
+                <div class="restaurant-list-section">
+                  <div class="panel-header-row">
+                    <h2>附近美食</h2>
+                    <span id="restaurantCountLabel" class="count-label"></span>
+                  </div>
+                  <div id="restaurantList" class="restaurant-grid"></div>
+                </div>
+              </section>
+
+              <aside class="map-column">
+                <section class="map-panel">
+                  <header class="panel-header">
+                    <h2>大学城美食地图</h2>
+                    <p class="panel-desc">下方最右侧为地图示意，可在实际项目中接入真实地图 SDK。</p>
+                  </header>
+                  <div id="mapPlaceholder">
+                    <p>示意地图区域</p>
+                    <p class="map-tip">当前以卡片形式呈现餐厅点位，真实项目可替换为地图。</p>
+                    <ul id="mapRestaurantPins" class="map-pins"></ul>
+                  </div>
+                </section>
+              </aside>
+            </div>
+          </section>
+        </section>
+
+        <section class="tab-content" id="tab-community">
+          <header class="panel-header">
+            <h2>校友美食社区</h2>
+            <p class="panel-desc">
+              看看同校同城的同学都在去哪吃，发现更多隐藏宝藏小店。
+            </p>
+          </header>
+          <div class="community-layout">
+            <section class="community-main">
+              <div class="community-tabs">
+                <button class="community-tab active" data-community-tab="hot">
+                  推荐
+                </button>
+                <button class="community-tab" data-community-tab="latest">
+                  最新
+                </button>
+              </div>
+              <div id="communityPostList" class="card-list"></div>
+            </section>
+            <aside class="community-side">
+              <div class="side-card">
+                <h3>主题榜单</h3>
+                <ul class="simple-list" id="communityRankingList"></ul>
+              </div>
+              <div class="side-card">
+                <h3>我要发探店</h3>
+                <p class="side-text">分享你发现的宝藏小店，帮助同学校友避雷种草。</p>
+                <button type="button" id="openPostFormButton" class="primary-button" style="margin-top:8px;">
+                  写一篇探店
+                </button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="tab-content" id="tab-hometown">
+          <header class="panel-header">
+            <h2>家乡美味专区</h2>
+            <p class="panel-desc">
+              异地求学，也要好好吃饭。按家乡地区帮你找到那一口熟悉的味道。
+            </p>
+          </header>
+          <section class="hometown-controls">
+            <div class="filter-group">
+              <label for="hometownRegionSelect">我的家乡</label>
+              <select id="hometownRegionSelect">
+                <option value="all">不限</option>
+                <option value="south">华南 / 粤菜</option>
+                <option value="north">东北 / 北方菜</option>
+                <option value="east">江浙沪</option>
+                <option value="west">川渝 / 西南</option>
+              </select>
+            </div>
+          </section>
+          <section>
+            <h3>同乡都在吃</h3>
+            <div id="hometownRestaurantList" class="card-list"></div>
+          </section>
+        </section>
+
+        <section class="tab-content" id="tab-ai">
+          <header class="panel-header">
+            <h2>AI 智能推荐</h2>
+            <p class="panel-desc">
+              告诉我你的预算、距离、人数和口味，我来帮你配出一份吃饭方案。
+            </p>
+          </header>
+          <section class="ai-layout">
+            <form id="aiForm" class="ai-form">
+              <div class="form-row">
+                <div class="filter-group">
+                  <label for="aiBudget">预算（人均）</label>
+                  <select id="aiBudget">
+                    <option value="any">不限</option>
+                    <option value="15">15 元以内</option>
+                    <option value="30">30 元以内</option>
+                    <option value="50">50 元以内</option>
+                  </select>
+                </div>
+                <div class="filter-group">
+                  <label for="aiDistance">距离</label>
+                  <select id="aiDistance">
+                    <option value="any">不限</option>
+                    <option value="0.5">500m</option>
+                    <option value="1">1km</option>
+                    <option value="3">3km</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="filter-group">
+                  <label for="aiPeople">人数</label>
+                  <select id="aiPeople">
+                    <option value="1">1 人</option>
+                    <option value="2-3">2–3 人</option>
+                    <option value="4-6">4–6 人</option>
+                    <option value="6+">6 人以上</option>
+                  </select>
+                </div>
+                <div class="filter-group">
+                  <label for="aiTaste">口味偏好</label>
+                  <select id="aiTaste">
+                    <option value="any">不限</option>
+                    <option value="spicy">偏辣</option>
+                    <option value="mild">清淡</option>
+                    <option value="heavy">重口味</option>
+                    <option value="sweet">偏甜</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="filter-group">
+                  <label for="aiScene">用餐场景</label>
+                  <select id="aiScene">
+                    <option value="any">不限</option>
+                    <option value="solo">一个人吃</option>
+                    <option value="dorm">宿舍聚餐</option>
+                    <option value="date">约会</option>
+                    <option value="late-night">深夜食堂</option>
+                    <option value="study">自习友好</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="primary-button">
+                  生成推荐
+                </button>
+                <button type="button" id="aiResetButton" class="secondary-button">
+                  重置条件
+                </button>
+              </div>
+            </form>
+
+            <section class="ai-result">
+              <h3>推荐结果</h3>
+              <p class="panel-desc">
+                下方结果基于示例数据进行本地匹配，可在真实项目中替换为后端 AI
+                服务或推荐算法。
+              </p>
+              <div id="aiResultList" class="card-list"></div>
+            </section>
+          </section>
+        </section>
+
+        <section class="tab-content" id="tab-profile">
+          <header class="panel-header">
+            <h2>我的</h2>
+            <p class="panel-desc">管理账号、收藏和评价记录。</p>
+          </header>
+          <section class="profile-layout profile-layout-single">
+            <div class="profile-card profile-card-entry" id="profileAccountCard" role="button" tabindex="0">
+              <div class="profile-account-preview">
+                <div class="profile-avatar-wrap" id="profileAvatarPreview">👤</div>
+                <div class="profile-account-info">
+                  <h3>账号信息</h3>
+                  <p class="profile-entry-name" id="profileNamePreview">未设置姓名</p>
+                  <p class="profile-entry-hint">点击管理头像与姓名</p>
+                </div>
+              </div>
+            </div>
+            <div class="profile-card profile-card-entry" id="profileFavoritesCard" role="button" tabindex="0">
+              <h3>我的收藏</h3>
+              <p class="profile-entry-meta" id="profileFavoritesCount">已收藏 0 家 · 点击查看</p>
+              <div id="favoriteListWrap" class="profile-list-wrap hidden">
+                <div id="favoriteList" class="card-list"></div>
+              </div>
+            </div>
+            <div class="profile-card profile-card-entry" id="profileHistoryCard" role="button" tabindex="0">
+              <h3>最近浏览</h3>
+              <p class="profile-entry-meta" id="profileHistoryCount">共 0 家 · 点击查看</p>
+              <div id="historyListWrap" class="profile-list-wrap hidden">
+                <div id="historyList" class="card-list"></div>
+              </div>
+            </div>
+            <div class="profile-card">
+              <h3>学生认证</h3>
+              <p class="profile-desc">认证后可参与校友社区发帖与评论。</p>
+              <p id="profileCertStatus" class="profile-cert-status"></p>
+              <button type="button" id="profileCertBtn" class="primary-button">去认证</button>
+            </div>
+            <div class="profile-card">
+              <button type="button" id="profileIntroBtn" class="secondary-button profile-intro-btn">产品使用说明</button>
+            </div>
+          </section>
+        </section>
+
+        <section class="tab-content" id="tab-detail">
+          <div id="detailBackdrop" class="detail-backdrop"></div>
+          <div id="restaurantDetailPage" class="detail-page-wrapper"></div>
+        </section>
+      </main>
+
+      <div id="restaurantDetailOverlay" class="overlay hidden">
+        <div class="overlay-backdrop"></div>
+        <div class="overlay-content">
+          <button class="overlay-close" id="detailCloseButton">×</button>
+          <div id="restaurantDetailContent"></div>
+        </div>
+      </div>
+
+      <div id="aiSummaryCard" class="ai-summary-card hidden"></div>
+
+      <div id="aiAssistantFab" class="ai-fab">
+        <span class="ai-fab-label">小智</span>
+      </div>
+      <div id="aiCommandPanel" class="ai-command-panel hidden">
+        <div class="ai-command-header">
+          <span>小智 · 吃什么助手</span>
+          <button id="aiCommandClose" class="ai-command-close">×</button>
+        </div>
+        <div class="ai-command-body">
+          <input
+            type="text"
+            id="aiCommandInput"
+            placeholder="跟小智说：帮我找一人食火锅 / 来个 30 元左右的团建..."
+          />
+          <button id="aiCommandSubmit" class="primary-button">去看看</button>
+        </div>
+        <p class="panel-desc">
+          提交后会跳转到「AI 智能推荐」页面，你也可以在那边手动调整条件。
+        </p>
+      </div>
+
+      <!-- 编辑账号头像、姓名 -->
+      <div id="profileEditOverlay" class="overlay hidden">
+        <div class="overlay-backdrop" id="profileEditBackdrop"></div>
+        <div class="overlay-content profile-edit-content">
+          <button type="button" class="overlay-close" id="profileEditCloseBtn">×</button>
+          <h2 class="panel-header">编辑资料</h2>
+          <div class="filter-group">
+            <label>头像</label>
+            <div class="profile-avatar-options" id="profileAvatarOptions">
+              <button type="button" class="profile-avatar-opt" data-avatar="👤" aria-label="默认">👤</button>
+              <button type="button" class="profile-avatar-opt" data-avatar="🧑" aria-label="用户">🧑</button>
+              <button type="button" class="profile-avatar-opt" data-avatar="👩" aria-label="用户">👩</button>
+              <button type="button" class="profile-avatar-opt" data-avatar="🧒" aria-label="用户">🧒</button>
+              <button type="button" class="profile-avatar-opt" data-avatar="😋" aria-label="吃货">😋</button>
+              <button type="button" class="profile-avatar-opt" data-avatar="🍜" aria-label="美食">🍜</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label for="profileEditName">姓名 / 昵称</label>
+            <input type="text" id="profileEditName" class="cert-input" placeholder="请输入昵称" maxlength="20" />
+          </div>
+          <button type="button" id="profileEditSaveBtn" class="primary-button">保存</button>
+        </div>
+      </div>
+
+      <!-- 登录弹窗：手机号快捷登录，下方蓝色小字「其他登录方式」跳转微信/QQ扫码 -->
+      <div id="loginOverlay" class="overlay hidden">
+        <div class="overlay-backdrop" id="loginBackdrop"></div>
+        <div class="login-overlay-content overlay-content">
+          <button type="button" class="overlay-close" id="loginCloseBtn">×</button>
+          <h2 class="login-title">登录</h2>
+          <p class="login-desc">未注册手机号验证后将自动创建账号</p>
+          <div id="loginPhonePanel" class="login-panel">
+            <input type="tel" id="loginPhoneInput" class="login-input" placeholder="请输入手机号" maxlength="11" />
+            <input type="text" id="loginCodeInput" class="login-input" placeholder="请输入验证码" maxlength="6" />
+            <button type="button" id="loginSendCodeBtn" class="secondary-button">获取验证码</button>
+            <a href="javascript:void(0)" id="loginOtherLink" class="login-other-link">其他登录方式</a>
+            <div id="loginOtherOptions" class="login-other-options hidden">
+              <a href="javascript:void(0)" id="loginWechatLink" class="login-other-item">微信扫码登录</a>
+              <a href="javascript:void(0)" id="loginQQLink" class="login-other-item">QQ 扫码登录</a>
+            </div>
+            <button type="button" id="loginSubmitBtn" class="primary-button login-submit">登录 / 注册</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 学生认证弹窗 -->
+      <div id="certOverlay" class="overlay hidden">
+        <div class="overlay-backdrop" id="certBackdrop"></div>
+        <div class="overlay-content cert-overlay-content">
+          <button type="button" class="overlay-close" id="certCloseBtn">×</button>
+          <h2 class="panel-header">学生认证</h2>
+          <p class="panel-desc">认证后可参与社区发帖与评论，请填写以下信息。</p>
+          <div class="filter-group">
+            <label for="certSchool">学校</label>
+            <input type="text" id="certSchool" class="cert-input" placeholder="请输入学校名称" value="示例大学城" />
+          </div>
+          <div class="filter-group">
+            <label for="certStudentId">学号 / 学生证号（选填）</label>
+            <input type="text" id="certStudentId" class="cert-input" placeholder="选填，用于验证" />
+          </div>
+          <button type="button" id="certSubmitBtn" class="primary-button">提交认证</button>
+        </div>
+      </div>
+
+      <!-- 商家环境图悬浮画廊：点击详情页商家环境后展示，左右切换，左上角退出 -->
+      <div id="envGalleryOverlay" class="env-gallery-overlay hidden">
+        <button type="button" class="env-gallery-close" id="envGalleryClose" aria-label="关闭">×</button>
+        <button type="button" class="env-gallery-nav env-gallery-prev" id="envGalleryPrev" aria-label="上一张">‹</button>
+        <div class="env-gallery-content">
+          <div class="env-gallery-current" id="envGalleryCurrent"></div>
+          <span class="env-gallery-counter" id="envGalleryCounter"></span>
+        </div>
+        <button type="button" class="env-gallery-nav env-gallery-next" id="envGalleryNext" aria-label="下一张">›</button>
+      </div>
+
+      <div id="postFormOverlay" class="overlay hidden">
+        <div class="overlay-backdrop" id="postFormBackdrop"></div>
+        <div class="overlay-content post-form-content">
+          <button class="overlay-close" id="postFormCloseButton">×</button>
+          <h2 class="panel-header">发探店</h2>
+          <p class="panel-desc">写下你的探店经历，可关联餐厅方便校友一键跳转。</p>
+          <form id="postForm" class="ai-form">
+            <div class="filter-group">
+              <label for="postTitle">标题</label>
+              <input type="text" id="postTitle" placeholder="例如：宿舍楼下新开的川味小馆绝了" required maxlength="50" />
+            </div>
+            <div class="filter-group">
+              <label for="postContent">内容</label>
+              <textarea id="postContent" rows="4" placeholder="说说口味、环境、价格，适合什么人去吃～" required></textarea>
+            </div>
+            <div class="filter-group">
+              <label for="postRestaurant">关联餐厅（选填）</label>
+              <select id="postRestaurant">
+                <option value="">不关联</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>图片 / 视频（选填）</label>
+              <input type="file" id="postMediaInput" accept="image/*,video/*" multiple />
+              <div id="postMediaPreview" class="post-media-preview"></div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="primary-button">发布</button>
+              <button type="button" id="postFormCancelButton" class="secondary-button">取消</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+
